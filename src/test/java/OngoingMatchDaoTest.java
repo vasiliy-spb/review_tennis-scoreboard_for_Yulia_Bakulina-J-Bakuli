@@ -38,7 +38,7 @@ public class OngoingMatchDaoTest {
         Assertions.assertEquals(2, found.getPlayer2());
 
         Assertions.assertThrows(
-                ValidationException.class,
+                NotFoundException.class,
                 () -> ongoingMatchDao.findByUuid(UUID.randomUUID())
         );
     }

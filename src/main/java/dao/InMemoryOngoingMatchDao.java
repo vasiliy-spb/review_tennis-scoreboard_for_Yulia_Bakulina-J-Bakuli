@@ -30,7 +30,7 @@ public class InMemoryOngoingMatchDao implements OngoingMatchDao {
         }
         OngoingMatch match = ongoingMatches.get(uuid);
         if (match == null) {
-            throw new ValidationException("Ongoing match not found for uuid=" + uuid);
+            throw new NotFoundException("Ongoing match not found for uuid=" + uuid);
         }
         return match;
     }
