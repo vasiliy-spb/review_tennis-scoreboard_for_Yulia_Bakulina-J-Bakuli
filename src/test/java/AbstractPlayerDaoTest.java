@@ -1,19 +1,12 @@
-import dao.InMemoryPlayerDao;
 import dao.PlayerDao;
 import exception.AlreadyExistsException;
 import exception.NotFoundException;
 import model.Player;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class PlayerDaoTest {
-    private PlayerDao playerDao;
-
-    @BeforeEach
-    public void setUp() {
-        playerDao = new InMemoryPlayerDao();
-    }
+public abstract class AbstractPlayerDaoTest {
+    protected PlayerDao playerDao;
 
     @Test
     void createPlayerTest() {
