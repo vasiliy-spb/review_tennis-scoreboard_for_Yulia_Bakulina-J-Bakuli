@@ -1,10 +1,11 @@
+package service;
+
 import exception.ValidationException;
 import model.MatchScoreResult;
 import model.MatchState;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import service.MatchScoreCalculationService;
 
 public class MatchScoreCalculationTest {
     private MatchScoreCalculationService service;
@@ -154,10 +155,9 @@ public class MatchScoreCalculationTest {
     }
 
     private MatchState basicMatchState() {
-        MatchState state = new MatchState();
-        state.setPlayer1Id(1);
-        state.setPlayer2Id(2);
-        return state;
+        Integer player1Id = 1;
+        Integer player2Id = 2;
+        return new MatchState(player1Id, player2Id);
     }
 
     private void setTieBreakAtSixSix(MatchState state) {

@@ -1,6 +1,7 @@
-import dao.InMemoryOngoingMatchDao;
-import dao.OngoingMatchDao;
+package dao;
+
 import exception.NotFoundException;
+import model.MatchState;
 import model.OngoingMatch;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,8 @@ public class OngoingMatchDaoTest {
     @Test
     public void saveOngoingMatchTest() {
         UUID uuid = UUID.randomUUID();
-        OngoingMatch saved = ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, null));
+        MatchState basicMatchState = createbasicMatchState();
+        OngoingMatch saved = ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, basicMatchState,null));
 
         Assertions.assertEquals(uuid, saved.getUuid());
         Assertions.assertEquals(1, saved.getPlayer1());
@@ -29,7 +31,8 @@ public class OngoingMatchDaoTest {
     @Test
     public void findByUuidTest() {
         UUID uuid = UUID.randomUUID();
-        ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, null));
+        MatchState basicMatchState = createbasicMatchState();
+        ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, basicMatchState, null));
 
         OngoingMatch found = ongoingMatchDao.findByUuid(uuid);
         Assertions.assertEquals(uuid, found.getUuid());
@@ -45,7 +48,8 @@ public class OngoingMatchDaoTest {
     @Test
     public void removeByUuidTest() {
         UUID uuid = UUID.randomUUID();
-        ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, null));
+        MatchState basicMatchState = createbasicMatchState();
+        ongoingMatchDao.save(new OngoingMatch(uuid, 1, 2, basicMatchState, null));
 
         ongoingMatchDao.removeByUuid(uuid);
 
@@ -53,5 +57,11 @@ public class OngoingMatchDaoTest {
                 NotFoundException.class,
                 () -> ongoingMatchDao.removeByUuid(uuid)
         );
+    }
+
+    private MatchState createbasicMatchState() {
+        Integer player1Id = 1;
+        Integer player2Id = 2;
+        return new MatchState(player1Id, player2Id);
     }
 }

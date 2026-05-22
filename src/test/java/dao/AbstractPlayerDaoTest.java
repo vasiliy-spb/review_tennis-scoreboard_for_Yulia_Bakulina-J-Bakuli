@@ -1,4 +1,5 @@
-import dao.PlayerDao;
+package dao;
+
 import exception.AlreadyExistsException;
 import exception.NotFoundException;
 import model.Player;

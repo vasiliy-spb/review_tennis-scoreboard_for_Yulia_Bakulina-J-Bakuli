@@ -1,4 +1,5 @@
-import dao.InMemoryPlayerDao;
+package dao;
+
 import org.junit.jupiter.api.BeforeEach;
 
 public class InMemoryPlayerDaoTest extends AbstractPlayerDaoTest {

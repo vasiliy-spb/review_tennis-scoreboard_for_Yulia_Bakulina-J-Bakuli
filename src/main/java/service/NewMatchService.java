@@ -5,6 +5,7 @@ import dao.PlayerDao;
 import exception.AlreadyExistsException;
 import exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
+import model.MatchState;
 import model.OngoingMatch;
 import model.Player;
 import validation.PlayerNameValidation;
@@ -13,8 +14,8 @@ import java.util.UUID;
 
 @Slf4j
 public class NewMatchService {
-    private final OngoingMatchDao ongoingMatchDao;
     private final PlayerDao playerDao;
+    private final OngoingMatchDao ongoingMatchDao;
 
     public NewMatchService(PlayerDao playerDao, OngoingMatchDao ongoingMatchDao) {
         this.playerDao = playerDao;
@@ -26,7 +27,8 @@ public class NewMatchService {
         Player player1 = findOrCreatePlayer(player1Name);
         Player player2 = findOrCreatePlayer(player2Name);
         UUID matchId = UUID.randomUUID();
-        OngoingMatch ongoingMatch = new OngoingMatch(matchId, player1.getId(), player2.getId(), null);
+        MatchState matchState = new MatchState(player1.getId(), player2.getId());
+        OngoingMatch ongoingMatch = new OngoingMatch(matchId, player1.getId(), player2.getId(), matchState, null);
         ongoingMatchDao.save(ongoingMatch);
         return matchId;
     }

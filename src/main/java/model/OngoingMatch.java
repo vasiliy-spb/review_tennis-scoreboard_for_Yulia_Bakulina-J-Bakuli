@@ -13,5 +13,6 @@ public class OngoingMatch {
     private UUID uuid;
     private Integer player1;
     private Integer player2;
+    private MatchState matchState;
     private Integer winner;
 }

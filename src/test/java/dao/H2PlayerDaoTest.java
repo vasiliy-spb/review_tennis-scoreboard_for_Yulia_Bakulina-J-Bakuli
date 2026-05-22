@@ -1,4 +1,5 @@
-import dao.H2PlayerDao;
+package dao;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.jupiter.api.BeforeEach;
