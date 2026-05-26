@@ -3,6 +3,7 @@ package dao;
 import exception.NotFoundException;
 import exception.ValidationException;
 import model.OngoingMatch;
+import validation.MatchValidation;
 
 import java.util.Map;
 import java.util.UUID;
@@ -13,12 +14,7 @@ public class InMemoryOngoingMatchDao implements OngoingMatchDao {
 
     @Override
     public OngoingMatch save(OngoingMatch match) {
-        if (match == null) {
-            throw new ValidationException("Ongoing match must not be null.");
-        }
-        if (match.getUuid() == null) {
-            throw new ValidationException("Ongoing match uuid must not be null.");
-        }
+        MatchValidation.validateOngoingMatch(match);
         ongoingMatches.put(match.getUuid(), match);
         return match;
     }

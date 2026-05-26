@@ -50,39 +50,9 @@ public class MatchValidation {
             throw new ValidationException("ongoingMatch uuid cannot be null");
         }
 
-        if (matchState == null) {
-            throw new ValidationException("matchState cannot be null");
-        }
-
         validateMatchState(matchState);
-
-        if (player1 == null) {
-            throw new ValidationException("player1 cannot be null");
-        }
-
-        if (player2 == null) {
-            throw new ValidationException("player2 cannot be null");
-        }
-
-        if (player1.equals(player2)) {
-            throw new ValidationException("players 1 and 2 must be different");
-        }
-
-        if (winner != null && !Objects.equals(winner, player1) && !Objects.equals(winner, player2)) {
-            throw new ValidationException("winner must be one of ongoing match players");
-        }
-
-        if (!Objects.equals(player1, matchState.getPlayer1Id())) {
-            throw new ValidationException("player1 from ongoingMatch must be the same as the one from matchState");
-        }
-
-        if (!Objects.equals(player2, matchState.getPlayer2Id())) {
-            throw new ValidationException("player2 from ongoingMatch must be the same as the one from matchState");
-        }
-
-        if (winner != null && !Objects.equals(winner, matchState.getWinnerPlayerId())) {
-            throw new ValidationException("existing winner from ongoingMatch must be the same as that from matchState");
-        }
+        validatePlayersConsistency(player1, player2, matchState);
+        validateWinnerConsistency(winner, player1, player2, matchState);
     }
 
     public static void validateMatchState(MatchState matchState) {
@@ -116,6 +86,38 @@ public class MatchValidation {
 
         if (matchState.getPlayer2TieBreakPoints() < 0) {
             throw new ValidationException("player2TieBreakPoints cannot be negative");
+        }
+    }
+
+    private static void validatePlayersConsistency(Integer player1, Integer player2, MatchState matchState) {
+        if (player1 == null) {
+            throw new ValidationException("player1 cannot be null");
+        }
+
+        if (player2 == null) {
+            throw new ValidationException("player2 cannot be null");
+        }
+
+        if (player1.equals(player2)) {
+            throw new ValidationException("players 1 and 2 must be different");
+        }
+
+        if (!Objects.equals(player1, matchState.getPlayer1Id())) {
+            throw new ValidationException("player1 from ongoingMatch must be the same as the one from matchState");
+        }
+
+        if (!Objects.equals(player2, matchState.getPlayer2Id())) {
+            throw new ValidationException("player2 from ongoingMatch must be the same as the one from matchState");
+        }
+    }
+
+    private static void validateWinnerConsistency(Integer winner, Integer player1, Integer player2, MatchState matchState) {
+        if (winner != null && !Objects.equals(winner, player1) && !Objects.equals(winner, player2)) {
+            throw new ValidationException("winner must be one of ongoing match players");
+        }
+
+        if (winner != null && !Objects.equals(winner, matchState.getWinnerPlayerId())) {
+            throw new ValidationException("existing winner from ongoingMatch must be the same as that from matchState");
         }
     }
 

@@ -4,19 +4,22 @@ import exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import model.MatchScoreResult;
 import model.MatchState;
+import validation.MatchValidation;
 
 @Slf4j
 public class MatchScoreCalculationService {
     public MatchScoreResult calculate(MatchState state, Integer pointWinnerPlayerId) {
-        validateInput(state, pointWinnerPlayerId);
+        validatePointInput(state, pointWinnerPlayerId);
+        MatchValidation.validateMatchState(state);
         applyPoint(state, pointWinnerPlayerId);
         processGameTransition(state, pointWinnerPlayerId);
         processSetTransition(state);
         processMatchFinish(state);
+        MatchValidation.validateMatchState(state);
         return buildResult(state);
     }
 
-    private void validateInput(MatchState state, Integer pointWinnerPlayerId) {
+    private void validatePointInput(MatchState state, Integer pointWinnerPlayerId) {
         if (state == null) {
             throw new ValidationException("Match state must not be null.");
         }
