@@ -59,8 +59,8 @@ public class MatchScoreServlet extends HttpServlet {
         MatchScoreResult matchScoreResult = matchScoreCalculationService.calculate(matchState, winnerId);
 
         if (matchScoreResult.isFinished()) {
-            ongoingMatchService.finishOngoingMatch(uuid);
             ongoingMatchService.saveFinishedMatch(uuid);
+            ongoingMatchService.finishOngoingMatch(uuid);
             resp.sendRedirect(req.getContextPath() + "/matches");
         } else {
             resp.sendRedirect(req.getContextPath() + "/match-score?uuid=" + uuid);

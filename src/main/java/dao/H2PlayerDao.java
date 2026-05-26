@@ -15,7 +15,7 @@ import util.PlayerUtils;
 import validation.PlayerNameValidation;
 
 @Slf4j
-public class H2PlayerDao implements PlayerDao {
+public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
     private static final String SELECT_BY_NAME = "from PlayerEntity p where p.name = :name";
     private static final String SELECT_BY_ID = "from PlayerEntity p where p.id = :id";
 
@@ -96,24 +96,6 @@ public class H2PlayerDao implements PlayerDao {
             throw e;
         } catch (Exception e) {
             throw new DatabaseException("Failed to find player by id=" + id, e);
-        }
-    }
-
-    private boolean isDuplicate(Exception e) {
-        Throwable cause = e.getCause();
-        return cause != null
-                && cause.getMessage() != null
-                && cause.getMessage().toLowerCase().contains("unique");
-    }
-
-    private void rollbackSafely(Transaction tx, Exception originalError) {
-        if (tx == null || !tx.isActive()) {
-            return;
-        }
-        try {
-            tx.rollback();
-        } catch (Exception rollbackError) {
-            log.warn("Rollback failed after original error: {}", originalError.getMessage(), rollbackError);
         }
     }
 }
