@@ -5,7 +5,7 @@ import exception.NotFoundException;
 import exception.ValidationException;
 import model.Player;
 import util.PlayerUtils;
-import validation.PlayerNameValidation;
+import validation.PlayerValidation;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -22,7 +22,7 @@ public class InMemoryPlayerDao implements PlayerDao {
         }
 
         String rawName = player.getName();
-        PlayerNameValidation.validatePlayerName(rawName);
+        PlayerValidation.validatePlayerName(rawName);
         String normalizedName = PlayerUtils.normalizeName(rawName);
 
         boolean alreadyExists = players.values().stream()
@@ -41,7 +41,7 @@ public class InMemoryPlayerDao implements PlayerDao {
 
     @Override
     public Player findByName(String name) {
-        PlayerNameValidation.validatePlayerName(name);
+        PlayerValidation.validatePlayerName(name);
         String normalizedName = PlayerUtils.normalizeName(name);
         return players.values().stream().filter(
                         player -> normalizedName.equals(player.getName()))

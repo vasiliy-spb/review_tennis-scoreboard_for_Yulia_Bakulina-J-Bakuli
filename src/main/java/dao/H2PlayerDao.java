@@ -12,7 +12,7 @@ import org.hibernate.Transaction;
 import persistence.entity.PlayerEntity;
 import util.HibernateUtil;
 import util.PlayerUtils;
-import validation.PlayerNameValidation;
+import validation.PlayerValidation;
 
 @Slf4j
 public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
@@ -25,7 +25,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
             throw new ValidationException("Player must not be null.");
         }
 
-        PlayerNameValidation.validatePlayerName(player.getName());
+        PlayerValidation.validatePlayerName(player.getName());
         String normalizedName = PlayerUtils.normalizeName(player.getName());
 
         log.debug("Saving player: id={}, name={} ", player.getId(), normalizedName);
@@ -52,7 +52,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
     @Override
     public Player findByName(String name) {
-        PlayerNameValidation.validatePlayerName(name);
+        PlayerValidation.validatePlayerName(name);
         String normalizedName = PlayerUtils.normalizeName(name);
 
         log.debug("Finding player by name: name={} ", normalizedName);

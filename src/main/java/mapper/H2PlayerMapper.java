@@ -3,7 +3,7 @@ package mapper;
 import exception.ValidationException;
 import model.Player;
 import persistence.entity.PlayerEntity;
-import validation.PlayerNameValidation;
+import validation.PlayerValidation;
 
 public final class H2PlayerMapper {
     private H2PlayerMapper() {
@@ -15,7 +15,7 @@ public final class H2PlayerMapper {
     }
 
     public static PlayerEntity toEntity(String normalizedName) {
-        PlayerNameValidation.validatePlayerName(normalizedName);
+        PlayerValidation.validatePlayerName(normalizedName);
 
         PlayerEntity entity = new PlayerEntity();
         entity.setName(normalizedName);

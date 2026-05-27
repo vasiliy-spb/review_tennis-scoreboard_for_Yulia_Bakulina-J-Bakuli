@@ -1,15 +1,43 @@
 package validation;
 
 import exception.ValidationException;
+import model.Player;
 import util.PlayerUtils;
 
-public class PlayerNameValidation {
+public class PlayerValidation {
+    public static void validatePlayerForCreate(Player player) {
+        if (player == null) {
+            throw new ValidationException("Player cannot be null");
+        }
+
+        validatePlayerName(player.getName());
+    }
+
+    public static void validatePlayerForRead(Player player) {
+        if (player == null) {
+            throw new ValidationException("Player cannot be null");
+        }
+
+        validatePlayerId(player.getId());
+        validatePlayerName(player.getName());
+    }
+
     public static void validatePlayerNames(String name1, String name2) {
         validatePlayerName(name1);
         validatePlayerName(name2);
 
         if (PlayerUtils.normalizeName(name1).equals(PlayerUtils.normalizeName(name2))) {
             throw new ValidationException("Player names should be unique and cannot be equal");
+        }
+    }
+
+    public static void validatePlayerId(Integer id) {
+        if (id == null) {
+            throw new ValidationException("player id cannot be null");
+        }
+
+        if (id < 0) {
+            throw new ValidationException("player id must be non-negative");
         }
     }
 

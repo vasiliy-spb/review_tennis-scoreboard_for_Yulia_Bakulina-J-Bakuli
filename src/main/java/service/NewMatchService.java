@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import model.MatchState;
 import model.OngoingMatch;
 import model.Player;
-import validation.PlayerNameValidation;
+import validation.PlayerValidation;
 
 import java.util.UUID;
 
@@ -23,7 +23,7 @@ public class NewMatchService {
     }
 
     public UUID startNewMatch(String player1Name, String player2Name) {
-        PlayerNameValidation.validatePlayerNames(player1Name, player2Name);
+        PlayerValidation.validatePlayerNames(player1Name, player2Name);
         Player player1 = findOrCreatePlayer(player1Name);
         Player player2 = findOrCreatePlayer(player2Name);
         UUID matchId = UUID.randomUUID();
