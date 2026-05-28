@@ -31,6 +31,8 @@
     </section>
 </header>
 <main>
+  <form method="post" action="${pageContext.request.contextPath}/match-score">
+  <input type="hidden" name="uuid" value="${uuid}">
     <div class="container">
         <h1>Current match</h1>
         <div class="current-match-image"></div>
@@ -42,6 +44,7 @@
                     <th class="table-text">Sets</th>
                     <th class="table-text">Games</th>
                     <th class="table-text">Points</th>
+                    <th class="table-text">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -51,7 +54,7 @@
                     <td class="table-text">${matchState.player1GamesInSet}</td>
                     <td class="table-text">${matchState.player1PointsInGame}</td>
                     <td class="table-text">
-                        <div class="score-btn">Score</div>
+                        <button class="score-btn" type="submit" name="winner" value="player1">Score</button>
                     </td>
                 </tr>
                 <tr class="player2">
@@ -60,13 +63,14 @@
                     <td class="table-text">${matchState.player2GamesInSet}</td>
                     <td class="table-text">${matchState.player2PointsInGame}</td>
                     <td class="table-text">
-                        <div class="score-btn">Score</div>
+                        <button class="score-btn" type="submit" name="winner" value="player2">Score</button>
                     </td>
                 </tr>
                 </tbody>
             </table>
         </section>
     </div>
+  </form>
 </main>
 <footer>
     <div class="footer">
