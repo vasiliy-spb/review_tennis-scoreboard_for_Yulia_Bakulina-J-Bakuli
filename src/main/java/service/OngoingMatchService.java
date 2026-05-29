@@ -67,8 +67,4 @@ public class OngoingMatchService {
         UUID uuid = UUID.fromString(uuidToConvert);
         ongoingMatchDao.removeByUuid(uuid);
     }
-
-    public void saveFinishedMatch(String uuidToConvert) {
-
-    }
 }
