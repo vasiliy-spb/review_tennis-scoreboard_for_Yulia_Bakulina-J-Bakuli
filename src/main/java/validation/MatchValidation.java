@@ -44,7 +44,7 @@ public class MatchValidation {
         Integer player1 = ongoingMatch.getPlayer1();
         Integer player2 = ongoingMatch.getPlayer2();
         MatchState matchState = ongoingMatch.getMatchState();
-        Integer winner = ongoingMatch.getWinner();
+        Integer winner = matchState.getWinnerPlayerId();
 
         if (uuid == null) {
             throw new ValidationException("ongoingMatch uuid cannot be null");

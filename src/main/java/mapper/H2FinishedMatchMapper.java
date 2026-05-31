@@ -1,6 +1,7 @@
 package mapper;
 
 import model.FinishedMatch;
+import model.MatchState;
 import model.OngoingMatch;
 import persistence.entity.FinishedMatchEntity;
 import persistence.entity.PlayerEntity;
@@ -23,11 +24,12 @@ public final class H2FinishedMatchMapper {
 
     public static FinishedMatchEntity toEntity(OngoingMatch ongoingMatch) {
         MatchValidation.validateOngoingMatch(ongoingMatch);
+        MatchState matchState = ongoingMatch.getMatchState();
 
         FinishedMatchEntity entity = new FinishedMatchEntity();
         PlayerEntity player1 = H2PlayerMapper.toEntityById(ongoingMatch.getPlayer1());
         PlayerEntity player2 = H2PlayerMapper.toEntityById(ongoingMatch.getPlayer2());
-        PlayerEntity winner = H2PlayerMapper.toEntityById(ongoingMatch.getWinner());
+        PlayerEntity winner = H2PlayerMapper.toEntityById(matchState.getWinnerPlayerId());
         LocalDateTime localDateTime = LocalDateTime.now();
 
         entity.setPlayer1(player1);
