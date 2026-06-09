@@ -31,7 +31,10 @@
     </section>
 </header>
 <main>
-  <form method="post" action="${pageContext.request.contextPath}/match-score">
+  <form method="post"
+        action="${pageContext.request.contextPath}/match-score"
+        onsubmit="this.querySelectorAll('button[type=submit]').forEach(btn => { btn.disabled = true;});">
+  <input type="hidden" name="winner" id="winnerField" value="">
   <input type="hidden" name="uuid" value="${uuid}">
     <div class="container">
         <h1>Current match</h1>
@@ -54,7 +57,11 @@
                     <td class="table-text">${matchState.player1GamesInSet}</td>
                     <td class="table-text">${matchState.player1PointsInGame}</td>
                     <td class="table-text">
-                        <button class="score-btn" type="submit" name="winner" value="player1">Score</button>
+                        <button class="score-btn"
+                                type="submit"
+                                onclick="document.getElementById('winnerField').value='player1';">
+                                Score
+                        </button>
                     </td>
                 </tr>
                 <tr class="player2">
@@ -63,7 +70,11 @@
                     <td class="table-text">${matchState.player2GamesInSet}</td>
                     <td class="table-text">${matchState.player2PointsInGame}</td>
                     <td class="table-text">
-                        <button class="score-btn" type="submit" name="winner" value="player2">Score</button>
+                        <button class="score-btn"
+                                type="submit"
+                                onclick="document.getElementById('winnerField').value='player2';">
+                                Score
+                        </button>
                     </td>
                 </tr>
                 </tbody>
