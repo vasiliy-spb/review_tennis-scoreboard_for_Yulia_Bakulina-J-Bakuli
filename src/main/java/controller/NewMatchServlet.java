@@ -29,7 +29,7 @@ public class NewMatchServlet extends BaseServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.info("GET /new-match");
         req.getRequestDispatcher("/WEB-INF/views/new-match.jsp").forward(req, resp);
-    } //Todo ExceptionHandlerFilter добавить
+    }
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

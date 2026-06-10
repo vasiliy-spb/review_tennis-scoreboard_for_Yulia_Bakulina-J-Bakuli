@@ -4,7 +4,6 @@ import dao.MatchesDao;
 import dao.OngoingMatchDao;
 import dao.PlayerDao;
 import db.AppLifecycleListener;
-import exception.NotFoundException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -59,29 +58,24 @@ public class MatchScoreServlet extends BaseServlet {
         String uuid = req.getParameter("uuid");
         String winner = req.getParameter("winner");
 
-        try {
-            OngoingMatch ongoingMatch = ongoingMatchService.findOngoingMatch(uuid);
-            Integer winnerId = ongoingMatchService.findWinnerPlayerId(winner, ongoingMatch);
-            MatchState matchState = ongoingMatch.getMatchState();
-            MatchScoreResult matchScoreResult;
+        OngoingMatch ongoingMatch = ongoingMatchService.findOngoingMatch(uuid);
+        Integer winnerId = ongoingMatchService.findWinnerPlayerId(winner, ongoingMatch);
+        MatchState matchState = ongoingMatch.getMatchState();
+        MatchScoreResult matchScoreResult;
 
-            if (matchState.isFinished()) {
-                resp.sendRedirect(req.getContextPath() + "/matches");
-                return;
-            } else {
-                matchScoreResult = matchScoreCalculationService.calculate(matchState, winnerId);
-            }
-
-            if (matchScoreResult.isFinished()) {
-                finishedMatchesService.saveFinishedMatch(ongoingMatch);
-                ongoingMatchService.finishOngoingMatch(uuid);
-                resp.sendRedirect(req.getContextPath() + "/matches");
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/match-score?uuid=" + uuid);
-            }
-        } catch (NotFoundException e) {
-            log.info("Ongoing match not found for uuid={}, redirect to /matches", uuid);
+        if (matchState.isFinished()) {
             resp.sendRedirect(req.getContextPath() + "/matches");
+            return;
+        } else {
+            matchScoreResult = matchScoreCalculationService.calculate(matchState, winnerId);
+        }
+
+        if (matchScoreResult.isFinished()) {
+            finishedMatchesService.saveFinishedMatch(ongoingMatch);
+            ongoingMatchService.finishOngoingMatch(uuid);
+            resp.sendRedirect(req.getContextPath() + "/matches");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/match-score?uuid=" + uuid);
         }
     }
 }

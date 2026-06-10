@@ -39,9 +39,9 @@
                         <p class="error-message">${errorMessage}</p>
                     </c:if>
                     <label class="label-player" for="playerOne">Player one</label>
-                    <input id="playerOne" name="player1Name" class="input-player" placeholder="Name" type="text" required title="Enter a name">
+                    <input id="playerOne" name="player1Name" value="${player1Name}" class="input-player" placeholder="Name" type="text" required title="Enter a name">
                     <label class="label-player" for="playerTwo">Player two</label>
-                    <input id="playerTwo" name="player2Name" class="input-player" placeholder="Name" type="text" required title="Enter a name">
+                    <input id="playerTwo" name="player2Name" value="${player2Name}" class="input-player" placeholder="Name" type="text" required title="Enter a name">
                     <input class="form-button" type="submit" value="Start">
                 </form>
             </div>
