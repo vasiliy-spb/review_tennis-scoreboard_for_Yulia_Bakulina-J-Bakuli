@@ -30,7 +30,7 @@ public class FinishedMatchesService {
     }
 
     public List<FinishedMatchDto> getAllFinishedMatches() {
-        List<FinishedMatch> finishedMatches = matchesDao.findAll();
+        List<FinishedMatch> finishedMatches = matchesDao.findAllMatches();
 
         if (finishedMatches.isEmpty()) {
             return Collections.emptyList();

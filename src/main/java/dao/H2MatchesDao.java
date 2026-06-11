@@ -32,6 +32,19 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                     "OR LOWER(p1.name) LIKE LOWER(:pattern) " +
                     "OR LOWER(p2.name) LIKE LOWER(:pattern))";
 
+    private static final String whereCondition =
+            "WHERE (:pattern IS NULL " +
+                    "OR LOWER(p1.name) LIKE LOWER(:pattern) " +
+                    "OR LOWER(p2.name) LIKE LOWER(:pattern)) ";
+
+    private static final String FIND_ALL_MATCHES_BY_PLAYER_NAME =
+            "SELECT m FROM FinishedMatchEntity m " +
+                    "JOIN FETCH m.player1 " +
+                    "JOIN FETCH m.player2 " +
+                    "JOIN FETCH m.winner " +
+                    whereCondition +
+                    "ORDER BY m.finishedAt DESC";
+
     @Override
     public FinishedMatch save(OngoingMatch ongoingMatch) {
         MatchValidation.validateOngoingMatch(ongoingMatch);
@@ -60,7 +73,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     @Override
-    public List<FinishedMatch> findAll() {
+    public List<FinishedMatch> findAllMatches() {
         log.debug("Finding all finished matches");
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
@@ -79,6 +92,20 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     @Override
+    public List<FinishedMatch> findAllMatches(int offset, int limit) {
+        log.debug("Finding all finished matches with offset {} and limit {}", offset, limit);
+        String pattern = bringToPattern(null);
+        return findByPattern(pattern, offset, limit);
+    }
+
+    @Override
+    public List<FinishedMatch> findMatchesByPlayerName(String playerName, int offset, int limit) {
+        log.debug("Finding finished matches by {} with offset {} and limit {}", playerName, offset, limit);
+        String pattern = bringToPattern(playerName);
+        return findByPattern(pattern, offset, limit);
+    }
+
+    @Override
     public Integer countMatchesByPlayerName(String playerName) {
         log.debug("Counting all finished matches by {}", playerName);
         String pattern = bringToPattern(playerName);
@@ -93,6 +120,18 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                     .intValue();
         } catch (Exception e) {
             throw new DatabaseException("Failed to count finished matches", e);
+        }
+    }
+
+    private List<FinishedMatch> findByPattern(String pattern, int offset, int limit) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(FIND_ALL_MATCHES_BY_PLAYER_NAME, FinishedMatch.class)
+                    .setParameter("pattern", pattern)
+                    .setFirstResult(offset)
+                    .setMaxResults(limit)
+                    .getResultList();
+        } catch (Exception e) {
+            throw new DatabaseException("Failed to find finished matches", e);
         }
     }
 
