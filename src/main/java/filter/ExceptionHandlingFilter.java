@@ -53,6 +53,10 @@ public class ExceptionHandlingFilter extends HttpFilter {
                 break;
             }
             case "/matches": {
+                String page = req.getParameter("page");
+                String filterByPlayerName = req.getParameter("filter_by_player_name");
+                req.setAttribute("page", page);
+                req.setAttribute("filterByPlayerName", filterByPlayerName);
                 jsp = "/WEB-INF/views/matches.jsp";
                 break;
             }
