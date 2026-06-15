@@ -60,8 +60,8 @@
                         <td colspan="4">Unable to load matches. Please try again later.</td>
                     </tr>
                 </c:when>
-                <c:when test="${not empty matches}">
-                    <c:forEach var="match" items="${matches}">
+                <c:when test="${not empty matchesPage.matches}">
+                    <c:forEach var="match" items="${matchesPage.matches}">
                         <tr>
                             <td>${match.finishedAtFormatted}</td>
                             <td>${match.player1Name}</td>
