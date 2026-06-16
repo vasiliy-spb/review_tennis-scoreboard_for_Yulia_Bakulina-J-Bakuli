@@ -86,13 +86,17 @@
             </tbody>
         </table>
 
-        <div class="pagination">
-            <a class="prev" href="#"> < </a>
-            <a class="num-page current" href="#">1</a>
-            <a class="num-page" href="#">2</a>
-            <a class="num-page" href="#">3</a>
-            <a class="next" href="#"> > </a>
-        </div>
+        <c:if test="${matchesPage.totalPages > 0}">
+            <div class="pagination">
+                <c:if test="${not empty matchesPage.previousPageUrl}">
+                    <a class="prev" href="${pageContext.request.contextPath}${matchesPage.previousPageUrl}">&lt;</a>
+                </c:if>
+                <span class="num-page current">${matchesPage.currentPage}</span>
+                <c:if test="${not empty matchesPage.nextPageUrl}">
+                    <a class="next" href="${pageContext.request.contextPath}${matchesPage.nextPageUrl}">&gt;</a>
+                </c:if>
+            </div>
+        </c:if>
     </div>
 </main>
 <footer>

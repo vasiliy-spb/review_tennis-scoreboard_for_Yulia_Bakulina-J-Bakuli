@@ -7,7 +7,7 @@ public record FinishedMatchesPageDto(
         int currentPage,
         int totalPages,
         String filterByPlayerName,
-        boolean hasPrevious,
-        boolean hasNext
+        String previousPageUrl,
+        String nextPageUrl
 ) {
 }
