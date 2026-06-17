@@ -1,6 +1,8 @@
 package mapper;
 
 import dto.FinishedMatchDto;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import persistence.entity.FinishedMatchEntity;
 
 import java.time.LocalDateTime;
@@ -8,27 +10,17 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
-public final class FinishedMatchDtoMapper {
-    private static final DateTimeFormatter FINISHED_AT_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+@Mapper
+public interface FinishedMatchDtoMapper {
+    @Mapping(target = "player1Name", source = "player1.name")
+    @Mapping(target = "player2Name", source = "player2.name")
+    @Mapping(target = "winnerName", source = "winner.name")
+    @Mapping(target = "finishedAtFormatted", expression = "java(formatFinishedAt(entity.getFinishedAt()))")
+    FinishedMatchDto toDto(FinishedMatchEntity entity);
 
-    private FinishedMatchDtoMapper() {
-        throw new UnsupportedOperationException("Utility class cannot be instantiated");
-    }
+    List<FinishedMatchDto> toDto(List<FinishedMatchEntity> dtos);
 
-    public static FinishedMatchDto toDto(FinishedMatchEntity finishedMatchEntity) {
-        LocalDateTime finishedAt = finishedMatchEntity.getFinishedAt();
-        String finishedAtFormatted = finishedAt.format(FINISHED_AT_FORMATTER);
-        return new FinishedMatchDto(
-                finishedMatchEntity.getPlayer1().getName(),
-                finishedMatchEntity.getPlayer2().getName(),
-                finishedMatchEntity.getWinner().getName(),
-                finishedAt,
-                finishedAtFormatted
-        );
-    }
-
-    public static List<FinishedMatchDto> toDto(List<FinishedMatchEntity> finishedMatchEntities) {
-        return finishedMatchEntities.stream()
-                .map(FinishedMatchDtoMapper::toDto).toList();
+    default String formatFinishedAt(LocalDateTime finishedAt) {
+        return finishedAt.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
     }
 }

@@ -56,7 +56,7 @@ public class MatchValidation {
         MatchState matchState = ongoingMatch.getMatchState();
         Integer winnerId = matchState.getWinnerPlayerId();
 
-        validateNotNullId(uuid, player1Id, player2Id, winnerId);
+        validateNotNullId(uuid, player1Id, player2Id);
         validateMatchState(matchState);
         validatePlayersConsistency(player1Id, player2Id, matchState);
         validateWinnerConsistency(winnerId, player1Id, player2Id, matchState);
@@ -70,7 +70,7 @@ public class MatchValidation {
         validateFinishedStateConsistency(matchState);
     }
 
-    private static void validateNotNullId(UUID uuid, Integer player1Id, Integer player2Id, Integer winnerId) {
+    private static void validateNotNullId(UUID uuid, Integer player1Id, Integer player2Id) {
         if (uuid == null) {
             throw new ValidationException("ongoingMatch uuid cannot be null");
         }
@@ -81,10 +81,6 @@ public class MatchValidation {
 
         if (player2Id == null) {
             throw new ValidationException("player2Id cannot be null");
-        }
-
-        if (winnerId == null) {
-            throw new ValidationException("winnerId cannot be null");
         }
     }
 

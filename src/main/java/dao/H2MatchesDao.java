@@ -10,6 +10,7 @@ import model.FinishedMatch;
 import model.OngoingMatch;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.mapstruct.factory.Mappers;
 import persistence.entity.FinishedMatchEntity;
 import util.HibernateUtil;
 import util.PlayerUtils;
@@ -19,6 +20,7 @@ import java.util.List;
 
 @Slf4j
 public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
+    private final FinishedMatchDtoMapper mapper = Mappers.getMapper(FinishedMatchDtoMapper.class);
     private static final String WHERE_BY_PLAYER_PATTERN =
             "WHERE (:pattern IS NULL " +
                     "OR LOWER(p1.name) LIKE LOWER(:pattern) " +
@@ -109,7 +111,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                     .setFirstResult(offset)
                     .setMaxResults(limit)
                     .getResultList();
-            return FinishedMatchDtoMapper.toDto(matchEntities);
+            return mapper.toDto(matchEntities);
         } catch (Exception e) {
             throw new DatabaseException("Failed to find finished matches", e);
         }
