@@ -1,10 +1,11 @@
 package mapper;
 
 import dto.FinishedMatchDto;
-import model.FinishedMatch;
+import persistence.entity.FinishedMatchEntity;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 public final class FinishedMatchDtoMapper {
@@ -14,15 +15,20 @@ public final class FinishedMatchDtoMapper {
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }
 
-    public static FinishedMatchDto toDto(FinishedMatch match, String player1Name, String player2Name, String winnerName) {
-        LocalDateTime finishedAt = match.getFinishedAt();
+    public static FinishedMatchDto toDto(FinishedMatchEntity finishedMatchEntity) {
+        LocalDateTime finishedAt = finishedMatchEntity.getFinishedAt();
         String finishedAtFormatted = finishedAt.format(FINISHED_AT_FORMATTER);
         return new FinishedMatchDto(
-                player1Name,
-                player2Name,
-                winnerName,
+                finishedMatchEntity.getPlayer1().getName(),
+                finishedMatchEntity.getPlayer2().getName(),
+                finishedMatchEntity.getWinner().getName(),
                 finishedAt,
                 finishedAtFormatted
         );
+    }
+
+    public static List<FinishedMatchDto> toDto(List<FinishedMatchEntity> finishedMatchEntities) {
+        return finishedMatchEntities.stream()
+                .map(FinishedMatchDtoMapper::toDto).toList();
     }
 }

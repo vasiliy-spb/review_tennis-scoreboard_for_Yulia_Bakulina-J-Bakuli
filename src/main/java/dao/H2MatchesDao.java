@@ -1,8 +1,10 @@
 package dao;
 
+import dto.FinishedMatchDto;
 import exception.AlreadyExistsException;
 import exception.DatabaseException;
 import lombok.extern.slf4j.Slf4j;
+import mapper.FinishedMatchDtoMapper;
 import mapper.H2FinishedMatchMapper;
 import model.FinishedMatch;
 import model.OngoingMatch;
@@ -17,13 +19,6 @@ import java.util.List;
 
 @Slf4j
 public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
-    private static final String FIND_ALL_MATCHES =
-            "SELECT m FROM FinishedMatchEntity m " +
-                    "JOIN FETCH m.player1 " +
-                    "JOIN FETCH m.player2 " +
-                    "JOIN FETCH m.winner " +
-                    "ORDER BY m.finishedAt DESC";
-
     private static final String WHERE_BY_PLAYER_PATTERN =
             "WHERE (:pattern IS NULL " +
                     "OR LOWER(p1.name) LIKE LOWER(:pattern) " +
@@ -77,13 +72,13 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
     }
 
     @Override
-    public List<FinishedMatch> findAllMatches(int offset, int limit) {
+    public List<FinishedMatchDto> findAllMatches(int offset, int limit) {
         log.debug("Finding all finished matches with offset {} and limit {}", offset, limit);
         return findByPattern(null, offset, limit);
     }
 
     @Override
-    public List<FinishedMatch> findMatchesByPlayerName(String playerName, int offset, int limit) {
+    public List<FinishedMatchDto> findMatchesByPlayerName(String playerName, int offset, int limit) {
         log.debug("Finding finished matches by {} with offset {} and limit {}", playerName, offset, limit);
         String pattern = bringToPattern(playerName);
         return findByPattern(pattern, offset, limit);
@@ -107,14 +102,14 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
         }
     }
 
-    private List<FinishedMatch> findByPattern(String pattern, int offset, int limit) {
+    private List<FinishedMatchDto> findByPattern(String pattern, int offset, int limit) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             List<FinishedMatchEntity> matchEntities = session.createQuery(FIND_ALL_MATCHES_BY_PLAYER_NAME, FinishedMatchEntity.class)
                     .setParameter("pattern", pattern)
                     .setFirstResult(offset)
                     .setMaxResults(limit)
                     .getResultList();
-            return H2FinishedMatchMapper.toFinishedMatch(matchEntities);
+            return FinishedMatchDtoMapper.toDto(matchEntities);
         } catch (Exception e) {
             throw new DatabaseException("Failed to find finished matches", e);
         }

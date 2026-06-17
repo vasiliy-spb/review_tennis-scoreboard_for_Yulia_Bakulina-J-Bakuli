@@ -32,7 +32,7 @@ public class MatchScoreServlet extends BaseServlet {
         MatchesDao matchesDao = getRequiredAttribute(AppLifecycleListener.MATCHES_DAO_ATTR, MatchesDao.class);
         OngoingMatchDao ongoingMatchDao = getRequiredAttribute(AppLifecycleListener.ONGOING_MATCH_DAO_ATTR, OngoingMatchDao.class);
         ongoingMatchService = new OngoingMatchService(ongoingMatchDao, playerDao);
-        finishedMatchesService = new FinishedMatchesService(matchesDao, playerDao);
+        finishedMatchesService = new FinishedMatchesService(matchesDao);
         matchScoreCalculationService = new MatchScoreCalculationService();
     }
 

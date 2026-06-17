@@ -1,13 +1,8 @@
 package service;
 
 import dao.MatchesDao;
-import dao.PlayerDao;
 import dto.FinishedMatchDto;
 import dto.FinishedMatchesPageDto;
-import exception.DatabaseException;
-import exception.NotFoundException;
-import mapper.FinishedMatchDtoMapper;
-import model.FinishedMatch;
 import model.OngoingMatch;
 import util.MatchesQueryUtils;
 import validation.MatchValidation;
@@ -15,18 +10,15 @@ import validation.MatchesQueryValidation;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import java.util.List;
 
 public class FinishedMatchesService {
     private static final String MATCHES_PATH = "/matches";
     private static final int PAGE_SIZE = 10;
     private final MatchesDao matchesDao;
-    private final PlayerDao playerDao;
 
-    public FinishedMatchesService(MatchesDao matchesDao, PlayerDao playerDao) {
+    public FinishedMatchesService(MatchesDao matchesDao) {
         this.matchesDao = matchesDao;
-        this.playerDao = playerDao;
     }
 
     public void saveFinishedMatch(OngoingMatch ongoingMatch) {
@@ -45,43 +37,13 @@ public class FinishedMatchesService {
         int offset = getOffset(page);
         List<FinishedMatchDto> matches =
                 playerNameFilter == null ?
-                        toDto(matchesDao.findAllMatches(offset, PAGE_SIZE)) :
-                        toDto(matchesDao.findMatchesByPlayerName(playerNameFilter, offset, PAGE_SIZE));
+                        matchesDao.findAllMatches(offset, PAGE_SIZE) :
+                        matchesDao.findMatchesByPlayerName(playerNameFilter, offset, PAGE_SIZE);
 
         String previousPageUrl = page > 1 ? buildPageUrl(page - 1, playerNameParam) : null;
         String nextPageUrl = page < totalPages ? buildPageUrl(page + 1, playerNameParam) : null;
 
         return new FinishedMatchesPageDto(matches, page, totalPages, playerNameParam, previousPageUrl, nextPageUrl);
-    }
-
-    private List<FinishedMatchDto> toDto(List<FinishedMatch> finishedMatches) {
-        if (finishedMatches.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        return finishedMatches.stream()
-                .map(match -> {
-                    String player1Name = resolvePlayerNameById(match.getPlayer1Id(), "player1");
-                    String player2Name = resolvePlayerNameById(match.getPlayer2Id(), "player2");
-                    String winnerName = resolvePlayerNameById(match.getWinnerId(), "winner");
-
-                    return FinishedMatchDtoMapper.toDto(
-                            match,
-                            player1Name,
-                            player2Name,
-                            winnerName
-                    );
-                })
-                .toList();
-    }
-
-    private String resolvePlayerNameById(Integer playerId, String role) {
-        try {
-            return playerDao.findById(playerId).getName();
-        } catch (NotFoundException e) {
-            throw new DatabaseException(
-                    String.format("Failed to resolve %s name for finished match, playerId=%s", role, playerId), e);
-        }
     }
 
     private String buildPageUrl(int targetPage, String playerNameParam) {
