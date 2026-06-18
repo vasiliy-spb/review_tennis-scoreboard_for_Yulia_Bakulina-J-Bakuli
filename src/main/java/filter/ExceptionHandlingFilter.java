@@ -27,8 +27,9 @@ public class ExceptionHandlingFilter extends HttpFilter {
         }
     }
 
-    private void writeErrorResponse(HttpServletRequest req, HttpServletResponse response, Exception e) throws IOException, ServletException {
+    private void writeErrorResponse(HttpServletRequest req, HttpServletResponse res, Exception e) throws IOException, ServletException {
         ExceptionMessage mapped = exceptionHandler.mapToMessage(e);
+        int status = mapped.getStatus();
         String message = exceptionHandler.resolveClientMessage(e, mapped);
 
         String jsp = null;
@@ -66,6 +67,8 @@ public class ExceptionHandlingFilter extends HttpFilter {
         if (jsp == null) {
             throw new ServletException(e);
         }
-        req.getRequestDispatcher(jsp).forward(req, response);
+        res.setStatus(status);
+        req.setAttribute("errorStatus", status);
+        req.getRequestDispatcher(jsp).forward(req, res);
     }
 }

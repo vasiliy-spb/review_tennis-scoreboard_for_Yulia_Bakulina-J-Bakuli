@@ -34,10 +34,13 @@
 <main>
     <div class="container">
         <h1>Current match</h1>
-        <c:if test="${not empty errorMessage}">
-            <p class="error-message">${errorMessage}</p>
-        </c:if>
-        <c:if test="${empty errorMessage}">
+            <c:if test="${not empty errorMessage}">
+                <div class="error-box">
+                    <span class="error-status">${errorStatus}</span>
+                    <span class="error-message">${errorMessage}</span>
+                </div>
+            </c:if>
+            <c:if test="${empty errorMessage}">
             <form method="post"
                   action="${pageContext.request.contextPath}/match-score"
                   onsubmit="this.querySelectorAll('button[type=submit]').forEach(btn => { btn.disabled = true;});">
@@ -86,7 +89,7 @@
                     </table>
                 </section>
             </form>
-        </c:if>
+            </c:if>
     </div>
 </main>
 <footer>

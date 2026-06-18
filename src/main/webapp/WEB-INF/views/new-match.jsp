@@ -34,9 +34,12 @@
             <h1>Start new match</h1>
             <div class="new-match-image"></div>
             <div class="form-container center">
-                <form method="post" action="#">
-                    <c:if test="${not empty errorMessage}">
-                        <p class="error-message">${errorMessage}</p>
+                <form method="post" action="${pageContext.request.contextPath}/new-match">
+                   <c:if test="${not empty errorMessage}">
+                        <div class="error-box">
+                            <span class="error-status">${errorStatus}</span>
+                            <span class="error-message">${errorMessage}</span>
+                        </div>
                     </c:if>
                     <label class="label-player" for="playerOne">Player one</label>
                     <input id="playerOne" name="player1Name" value="${player1Name}" class="input-player" placeholder="Name" type="text" required title="Enter a name">

@@ -32,9 +32,12 @@
 <main>
     <div class="container">
         <h1>Matches</h1>
-        <c:if test="${not empty errorMessage}">
-            <p class="error-message">${errorMessage}</p>
-        </c:if>
+            <c:if test="${not empty errorMessage}">
+                <div class="error-box">
+                    <span class="error-status">${errorStatus}</span>
+                    <span class="error-message">${errorMessage}</span>
+                </div>
+            </c:if>
 <div class="input-container">
     <form method="get" action="${pageContext.request.contextPath}/matches" class="form-matches">
         <input
@@ -51,6 +54,7 @@
     </form>
 </div>
 
+        <c:if test="${empty errorMessage}">
         <table class="table-matches">
             <thead>
             <tr>
@@ -62,11 +66,6 @@
             </thead>
             <tbody>
             <c:choose>
-                <c:when test="${not empty errorMessage}">
-                    <tr>
-                        <td colspan="4">Unable to load matches. Please try again later.</td>
-                    </tr>
-                </c:when>
                 <c:when test="${not empty matchesPage.matches}">
                     <c:forEach var="match" items="${matchesPage.matches}">
                         <tr>
@@ -96,6 +95,7 @@
                     <a class="next" href="${pageContext.request.contextPath}${matchesPage.nextPageUrl}">&gt;</a>
                 </c:if>
             </div>
+        </c:if>
         </c:if>
     </div>
 </main>

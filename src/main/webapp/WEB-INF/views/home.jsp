@@ -32,9 +32,12 @@
 <main>
     <div class="container">
         <h1>Welcome to Tennis Scoreboard</h1>
-        <c:if test="${not empty errorMessage}">
-            <p class="error-message">${errorMessage}</p>
-        </c:if>
+            <c:if test="${not empty errorMessage}">
+                <div class="error-box">
+                    <span class="error-status">${errorStatus}</span>
+                    <span class="error-message">${errorMessage}</span>
+                </div>
+            </c:if>
         <p>Manage your tennis matches, record results, and track rankings</p>
         <div class="welcome-image"></div>
         <div class="form-container center">
