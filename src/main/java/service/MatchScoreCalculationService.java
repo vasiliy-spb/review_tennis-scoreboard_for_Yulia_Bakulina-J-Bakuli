@@ -166,10 +166,6 @@ public class MatchScoreCalculationService {
     }
 
     private MatchScoreResult buildResult(MatchState state) {
-        MatchScoreResult result = new MatchScoreResult();
-        result.setState(state);
-        result.setFinished(state.isFinished());
-        result.setWinnerPlayerId(state.getWinnerPlayerId());
-        return result;
+        return new MatchScoreResult(state, state.isFinished(), state.getWinnerPlayerId());
     }
 }
