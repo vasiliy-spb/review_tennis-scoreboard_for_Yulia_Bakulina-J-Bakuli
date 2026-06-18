@@ -1,12 +1,15 @@
 package model;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class MatchState {
+    @Setter(AccessLevel.NONE)
     private Integer player1Id;
+    @Setter(AccessLevel.NONE)
     private Integer player2Id;
     private int player1Sets;
     private int player2Sets;

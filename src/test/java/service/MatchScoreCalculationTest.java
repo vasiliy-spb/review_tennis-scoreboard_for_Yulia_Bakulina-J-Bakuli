@@ -28,10 +28,15 @@ public class MatchScoreCalculationTest {
     }
 
     @Test
-    public void validateNullIdTest() {
-        state.setPlayer1Id(null);
-        Assertions.assertThrows(ValidationException.class, () -> service.calculate(state, 1));
-        state.setPlayer1Id(1);
+    public void validateNullPlayerIdsTest() {
+        Assertions.assertThrows(ValidationException.class,
+                () -> service.calculate(new MatchState(null, 2), 1));
+        Assertions.assertThrows(ValidationException.class,
+                () -> service.calculate(new MatchState(1, null), 1));
+    }
+
+    @Test
+    public void validateNullPointWinnerPlayerIdTest() {
         Assertions.assertThrows(ValidationException.class, () -> service.calculate(state, null));
     }
 
