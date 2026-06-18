@@ -21,14 +21,14 @@ public class FinishedMatchEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "player1_id", nullable = false)
     private PlayerEntity player1;
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "player2_id", nullable = false)
     private PlayerEntity player2;
-    @ManyToOne
-    @JoinColumn(name = "winner_id", nullable = false) //Todo to check whether i need to delete some extra checks
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "winner_id", nullable = false)
     private PlayerEntity winner;
     @Column(name = "finished_at", nullable = false)
     private LocalDateTime finishedAt;
