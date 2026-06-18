@@ -7,11 +7,13 @@ import lombok.extern.slf4j.Slf4j;
 import mapper.FinishedMatchDtoMapper;
 import mapper.H2FinishedMatchMapper;
 import model.FinishedMatch;
+import model.MatchState;
 import model.OngoingMatch;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.mapstruct.factory.Mappers;
 import persistence.entity.FinishedMatchEntity;
+import persistence.entity.PlayerEntity;
 import util.HibernateUtil;
 import util.PlayerUtils;
 import validation.MatchValidation;
@@ -50,8 +52,12 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
         Transaction tx = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             tx = session.beginTransaction();
-            FinishedMatchEntity finishedMatchEntity = H2FinishedMatchMapper.toEntity(ongoingMatch);
 
+            MatchState matchState = ongoingMatch.getMatchState();
+            PlayerEntity player1 = session.getReference(PlayerEntity.class, ongoingMatch.getPlayer1());
+            PlayerEntity player2 = session.getReference(PlayerEntity.class, ongoingMatch.getPlayer2());
+            PlayerEntity winner = session.getReference(PlayerEntity.class, matchState.getWinnerPlayerId());
+            FinishedMatchEntity finishedMatchEntity = H2FinishedMatchMapper.toEntity(player1, player2, winner);
             session.persist(finishedMatchEntity);
             tx.commit();
 

@@ -13,14 +13,6 @@ public final class H2PlayerMapper {
     }
 
     public static PlayerEntity toEntity(String normalizedName) {
-        PlayerEntity entity = new PlayerEntity();
-        entity.setName(normalizedName);
-        return entity;
-    }
-
-    public static PlayerEntity toEntityById(Integer playerId) {
-        PlayerEntity entity = new PlayerEntity();
-        entity.setId(playerId);
-        return entity;
+        return new PlayerEntity(normalizedName);
     }
 }

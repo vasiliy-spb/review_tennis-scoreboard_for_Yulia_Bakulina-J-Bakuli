@@ -1,13 +1,10 @@
 package mapper;
 
 import model.FinishedMatch;
-import model.MatchState;
-import model.OngoingMatch;
 import persistence.entity.FinishedMatchEntity;
 import persistence.entity.PlayerEntity;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 public final class H2FinishedMatchMapper {
     private H2FinishedMatchMapper() {
@@ -22,25 +19,8 @@ public final class H2FinishedMatchMapper {
                 finishedMatchEntity.getFinishedAt());
     }
 
-    public static List<FinishedMatch> toFinishedMatch(List <FinishedMatchEntity> entities) {
-        return entities.stream()
-                .map(H2FinishedMatchMapper::toFinishedMatch)
-                .toList();
-    }
-
-    public static FinishedMatchEntity toEntity(OngoingMatch ongoingMatch) {
-        MatchState matchState = ongoingMatch.getMatchState();
-
-        FinishedMatchEntity entity = new FinishedMatchEntity();
-        PlayerEntity player1 = H2PlayerMapper.toEntityById(ongoingMatch.getPlayer1());
-        PlayerEntity player2 = H2PlayerMapper.toEntityById(ongoingMatch.getPlayer2());
-        PlayerEntity winner = H2PlayerMapper.toEntityById(matchState.getWinnerPlayerId());
+    public static FinishedMatchEntity toEntity(PlayerEntity player1, PlayerEntity player2, PlayerEntity winner) {
         LocalDateTime localDateTime = LocalDateTime.now();
-
-        entity.setPlayer1(player1);
-        entity.setPlayer2(player2);
-        entity.setWinner(winner);
-        entity.setFinishedAt(localDateTime);
-        return entity;
+        return new FinishedMatchEntity(player1, player2, winner, localDateTime);
     }
 }
