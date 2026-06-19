@@ -17,13 +17,8 @@ public class InMemoryPlayerDao implements PlayerDao {
 
     @Override
     public Player save(Player player) {
-        if (player == null) {
-            throw new ValidationException("Player must not be null.");
-        }
-
-        String rawName = player.name();
-        PlayerValidation.validatePlayerName(rawName);
-        String normalizedName = PlayerUtils.normalizeName(rawName);
+        PlayerValidation.validatePlayerForCreate(player);
+        String normalizedName = PlayerUtils.normalizeName(player.name());
 
         boolean alreadyExists = players.values().stream()
                 .anyMatch(existingPlayer -> normalizedName.equals(existingPlayer.name()));
@@ -51,9 +46,7 @@ public class InMemoryPlayerDao implements PlayerDao {
 
     @Override
     public Player findById(Integer id) {
-        if (id == null) {
-            throw new ValidationException("Player's id must not be null.");
-        }
+        PlayerValidation.validatePlayerId(id);
         Player player = players.get(id);
         if (player == null) {
             throw new NotFoundException("Player not found for id=" + id);

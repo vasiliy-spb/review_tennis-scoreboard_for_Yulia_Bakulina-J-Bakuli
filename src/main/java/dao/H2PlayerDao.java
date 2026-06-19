@@ -21,11 +21,8 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
     @Override
     public Player save(Player player) {
-        if (player == null) {
-            throw new ValidationException("Player must not be null.");
-        }
+        PlayerValidation.validatePlayerForCreate(player);
 
-        PlayerValidation.validatePlayerName(player.name());
         String normalizedName = PlayerUtils.normalizeName(player.name());
 
         log.debug("Saving player: id={}, name={} ", player.id(), normalizedName);
@@ -76,9 +73,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
     @Override
     public Player findById(Integer id) {
-        if (id == null) {
-            throw new ValidationException("Player's id must not be null.");
-        }
+        PlayerValidation.validatePlayerId(id);
 
         log.debug("Finding player by id: id={} ", id);
 
