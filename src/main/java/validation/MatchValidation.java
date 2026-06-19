@@ -92,14 +92,6 @@ public class MatchValidation {
             throw new ValidationException("player2GamesInSet cannot be negative");
         }
 
-        if (matchState.getPlayer1PointsInGame() < 0) {
-            throw new ValidationException("player1PointsInGame cannot be negative");
-        }
-
-        if (matchState.getPlayer2PointsInGame() < 0) {
-            throw new ValidationException("player2PointsInGame cannot be negative");
-        }
-
         if (matchState.getPlayer1TieBreakPoints() < 0) {
             throw new ValidationException("player1TieBreakPoints cannot be negative");
         }

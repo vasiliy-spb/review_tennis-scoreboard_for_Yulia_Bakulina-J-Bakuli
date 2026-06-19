@@ -1,6 +1,7 @@
 package service;
 
 import exception.ValidationException;
+import model.GamePoint;
 import model.MatchState;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,8 +50,8 @@ public class MatchScoreCalculationTest {
     @Test
     public void shouldIncreasePlayer2PointByOneWhenPlayer2WinsTest() {
         service.calculate(state, 2);
-        Assertions.assertEquals(0, state.getPlayer1PointsInGame());
-        Assertions.assertEquals(1, state.getPlayer2PointsInGame());
+        Assertions.assertEquals(GamePoint.LOVE, state.getPlayer1PointsInGame());
+        Assertions.assertEquals(GamePoint.FIFTEEN, state.getPlayer2PointsInGame());
     }
 
     @Test
@@ -58,9 +59,9 @@ public class MatchScoreCalculationTest {
         awardPoints(state, 1, 3);
         service.calculate(state, 1);
         Assertions.assertEquals(1, state.getPlayer1GamesInSet());
-        Assertions.assertEquals(0, state.getPlayer1PointsInGame());
+        Assertions.assertEquals(GamePoint.LOVE, state.getPlayer1PointsInGame());
         Assertions.assertEquals(0, state.getPlayer2GamesInSet());
-        Assertions.assertEquals(0, state.getPlayer2PointsInGame());
+        Assertions.assertEquals(GamePoint.LOVE, state.getPlayer2PointsInGame());
     }
 
     @Test
@@ -70,8 +71,8 @@ public class MatchScoreCalculationTest {
 
         service.calculate(state, 1);
 
-        Assertions.assertEquals(4, state.getPlayer1PointsInGame());
-        Assertions.assertEquals(3, state.getPlayer2PointsInGame());
+        Assertions.assertEquals(GamePoint.ADVANTAGE, state.getPlayer1PointsInGame());
+        Assertions.assertEquals(GamePoint.FORTY, state.getPlayer2PointsInGame());
         Assertions.assertEquals(0, state.getPlayer1GamesInSet());
         Assertions.assertEquals(0, state.getPlayer2GamesInSet());
     }
@@ -84,8 +85,8 @@ public class MatchScoreCalculationTest {
 
         service.calculate(state, 1);
 
-        Assertions.assertEquals(0, state.getPlayer1PointsInGame());
-        Assertions.assertEquals(0, state.getPlayer2PointsInGame());
+        Assertions.assertEquals(GamePoint.LOVE, state.getPlayer1PointsInGame());
+        Assertions.assertEquals(GamePoint.LOVE, state.getPlayer2PointsInGame());
         Assertions.assertEquals(1, state.getPlayer1GamesInSet());
         Assertions.assertEquals(0, state.getPlayer2GamesInSet());
     }

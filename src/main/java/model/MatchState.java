@@ -25,12 +25,20 @@ public class MatchState {
         this.player2Id = player2Id;
     }
 
-    public int getPlayer1PointsInGame() {
+    public GamePoint getPlayer1PointsInGame() {
         return regularGame.getPlayer1PointsInGame();
     }
 
-    public int getPlayer2PointsInGame() {
+    public GamePoint getPlayer2PointsInGame() {
         return regularGame.getPlayer2PointsInGame();
+    }
+
+    public String getPlayer1PointsDisplay() {
+        return regularGame.getPlayer1PointsInGame().display();
+    }
+
+    public String getPlayer2PointsDisplay() {
+        return regularGame.getPlayer2PointsInGame().display();
     }
 
     public int getPlayer1TieBreakPoints() {
@@ -56,11 +64,11 @@ public class MatchState {
     }
 
     public void awardPointTo(Integer pointWinnerPlayerId) {
-        boolean isPlayer1 = isPlayer1Winner(pointWinnerPlayerId);
+        boolean isPlayer1PointWinner = isPlayer1Winner(pointWinnerPlayerId);
         if (tieBreak) {
-            tieBreakScore.awardPointTo(isPlayer1);
+            tieBreakScore.awardPointTo(isPlayer1PointWinner);
         } else {
-            regularGame.awardPointTo(isPlayer1);
+            regularGame.awardPointTo(isPlayer1PointWinner);
         }
         processGameTransition(pointWinnerPlayerId);
         processSetTransition();
