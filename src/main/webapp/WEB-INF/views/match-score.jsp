@@ -45,7 +45,7 @@
                   action="${pageContext.request.contextPath}/match-score"
                   onsubmit="this.querySelectorAll('button[type=submit]').forEach(btn => { btn.disabled = true;});">
                 <input type="hidden" name="winner" id="winnerField" value="">
-                <input type="hidden" name="uuid" value="${uuid}">
+                <input type="hidden" name="uuid" value="${matchScore.uuid}">
                 <div class="current-match-image"></div>
                 <section class="score">
                     <table class="table">
@@ -60,10 +60,10 @@
                         </thead>
                         <tbody>
                         <tr class="player1">
-                            <td class="table-text">${player1Name}</td>
-                            <td class="table-text">${matchState.player1Sets}</td>
-                            <td class="table-text">${matchState.player1GamesInSet}</td>
-                            <td class="table-text">${matchState.player1PointsDisplay}</td>
+                            <td class="table-text">${matchScore.player1Name}</td>
+                            <td class="table-text">${matchScore.player1Sets}</td>
+                            <td class="table-text">${matchScore.player1GamesInSet}</td>
+                            <td class="table-text">${matchScore.player1PointsDisplay}</td>
                             <td class="table-text">
                                 <button class="score-btn"
                                         type="submit"
@@ -73,10 +73,10 @@
                             </td>
                         </tr>
                         <tr class="player2">
-                            <td class="table-text">${player2Name}</td>
-                            <td class="table-text">${matchState.player2Sets}</td>
-                            <td class="table-text">${matchState.player2GamesInSet}</td>
-                            <td class="table-text">${matchState.player2PointsDisplay}</td>
+                            <td class="table-text">${matchScore.player2Name}</td>
+                            <td class="table-text">${matchScore.player2Sets}</td>
+                            <td class="table-text">${matchScore.player2GamesInSet}</td>
+                            <td class="table-text">${matchScore.player2PointsDisplay}</td>
                             <td class="table-text">
                                 <button class="score-btn"
                                         type="submit"

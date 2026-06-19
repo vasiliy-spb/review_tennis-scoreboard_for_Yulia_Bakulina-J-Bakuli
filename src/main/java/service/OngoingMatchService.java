@@ -2,6 +2,7 @@ package service;
 
 import dao.OngoingMatchDao;
 import dao.PlayerDao;
+import dto.MatchScoreDto;
 import exception.ValidationException;
 import model.OngoingMatch;
 import model.Player;
@@ -19,6 +20,21 @@ public class OngoingMatchService {
     public OngoingMatchService(OngoingMatchDao ongoingMatchDao, PlayerDao playerDao) {
         this.ongoingMatchDao = ongoingMatchDao;
         this.playerDao = playerDao;
+    }
+
+    public MatchScoreDto findMatchScore(String uuidToConvert) {
+        OngoingMatch ongoingMatch = findOngoingMatch(uuidToConvert);
+        return new MatchScoreDto(
+                ongoingMatch.getUuid().toString(),
+                findPlayerNameById(ongoingMatch.getPlayer1()),
+                findPlayerNameById(ongoingMatch.getPlayer2()),
+                ongoingMatch.getMatchState().getPlayer1Sets(),
+                ongoingMatch.getMatchState().getPlayer2Sets(),
+                ongoingMatch.getMatchState().getPlayer1GamesInSet(),
+                ongoingMatch.getMatchState().getPlayer2GamesInSet(),
+                ongoingMatch.getMatchState().getPlayer1PointsDisplay(),
+                ongoingMatch.getMatchState().getPlayer2PointsDisplay()
+        );
     }
 
     public OngoingMatch findOngoingMatch(String uuidToConvert) {

@@ -4,6 +4,7 @@ import dao.MatchesDao;
 import dao.OngoingMatchDao;
 import dao.PlayerDao;
 import db.AppLifecycleListener;
+import dto.MatchScoreDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,7 +12,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import model.MatchState;
 import model.OngoingMatch;
-import model.PlayerSide;
 import service.FinishedMatchesService;
 import service.MatchScoreCalculationService;
 import service.OngoingMatchService;
@@ -39,14 +39,8 @@ public class MatchScoreServlet extends BaseServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         log.info("GET /match-score");
         String uuid = req.getParameter("uuid");
-
-        OngoingMatch ongoingMatch = ongoingMatchService.findOngoingMatch(uuid);
-        req.setAttribute("uuid", ongoingMatch.getUuid());
-        req.setAttribute("matchState", ongoingMatch.getMatchState());
-        req.setAttribute("player1Name", ongoingMatchService.findPlayerNameByOngoingMatch(ongoingMatch, PlayerSide.PLAYER1));
-        req.setAttribute("player2Name", ongoingMatchService.findPlayerNameByOngoingMatch(ongoingMatch, PlayerSide.PLAYER2));
-        req.setAttribute("player1", ongoingMatch.getPlayer1());
-        req.setAttribute("player2", ongoingMatch.getPlayer2());
+        MatchScoreDto matchScore = ongoingMatchService.findMatchScore(uuid);
+        req.setAttribute("matchScore", matchScore);
         req.getRequestDispatcher("/WEB-INF/views/match-score.jsp").forward(req, resp);
     }
 
