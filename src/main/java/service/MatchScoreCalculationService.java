@@ -2,18 +2,17 @@ package service;
 
 import exception.ValidationException;
 import lombok.extern.slf4j.Slf4j;
-import model.MatchScoreResult;
 import model.MatchState;
 import validation.MatchValidation;
 
 @Slf4j
 public class MatchScoreCalculationService {
-    public MatchScoreResult calculate(MatchState state, Integer pointWinnerPlayerId) {
+    public MatchState calculate(MatchState state, Integer pointWinnerPlayerId) {
         validatePointInput(state, pointWinnerPlayerId);
         MatchValidation.validateMatchState(state);
         state.awardPointTo(pointWinnerPlayerId);
         MatchValidation.validateMatchState(state);
-        return buildResult(state);
+        return state;
     }
 
     private void validatePointInput(MatchState state, Integer pointWinnerPlayerId) {
@@ -33,9 +32,5 @@ public class MatchScoreCalculationService {
         if (state.isFinished()) {
             throw new ValidationException("Match is already finished.");
         }
-    }
-
-    private MatchScoreResult buildResult(MatchState state) {
-        return new MatchScoreResult(state);
     }
 }

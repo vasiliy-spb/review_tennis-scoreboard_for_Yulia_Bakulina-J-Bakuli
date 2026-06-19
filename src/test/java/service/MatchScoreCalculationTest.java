@@ -1,7 +1,6 @@
 package service;
 
 import exception.ValidationException;
-import model.MatchScoreResult;
 import model.MatchState;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,19 +48,19 @@ public class MatchScoreCalculationTest {
 
     @Test
     public void shouldIncreasePlayer2PointByOneWhenPlayer2WinsTest() {
-        MatchScoreResult result = service.calculate(state, 2);
-        Assertions.assertEquals(0, result.getState().getPlayer1PointsInGame());
-        Assertions.assertEquals(1, result.getState().getPlayer2PointsInGame());
+        service.calculate(state, 2);
+        Assertions.assertEquals(0, state.getPlayer1PointsInGame());
+        Assertions.assertEquals(1, state.getPlayer2PointsInGame());
     }
 
     @Test
     public void shouldAwardGameAndResetGamePointsWhenPlayerWinsFromThreePointsTest() {
         awardPoints(state, 1, 3);
-        MatchScoreResult result = service.calculate(state, 1);
-        Assertions.assertEquals(1, result.getState().getPlayer1GamesInSet());
-        Assertions.assertEquals(0, result.getState().getPlayer1PointsInGame());
-        Assertions.assertEquals(0, result.getState().getPlayer2GamesInSet());
-        Assertions.assertEquals(0, result.getState().getPlayer2PointsInGame());
+        service.calculate(state, 1);
+        Assertions.assertEquals(1, state.getPlayer1GamesInSet());
+        Assertions.assertEquals(0, state.getPlayer1PointsInGame());
+        Assertions.assertEquals(0, state.getPlayer2GamesInSet());
+        Assertions.assertEquals(0, state.getPlayer2PointsInGame());
     }
 
     @Test
@@ -69,12 +68,12 @@ public class MatchScoreCalculationTest {
         awardPoints(state, 1, 3);
         awardPoints(state, 2, 3);
 
-        MatchScoreResult result = service.calculate(state, 1);
+        service.calculate(state, 1);
 
-        Assertions.assertEquals(4, result.getState().getPlayer1PointsInGame());
-        Assertions.assertEquals(3, result.getState().getPlayer2PointsInGame());
-        Assertions.assertEquals(0, result.getState().getPlayer1GamesInSet());
-        Assertions.assertEquals(0, result.getState().getPlayer2GamesInSet());
+        Assertions.assertEquals(4, state.getPlayer1PointsInGame());
+        Assertions.assertEquals(3, state.getPlayer2PointsInGame());
+        Assertions.assertEquals(0, state.getPlayer1GamesInSet());
+        Assertions.assertEquals(0, state.getPlayer2GamesInSet());
     }
 
     @Test
@@ -83,21 +82,19 @@ public class MatchScoreCalculationTest {
         awardPoints(state, 2, 3);
         state.awardPointTo(1);
 
-        MatchScoreResult result = service.calculate(state, 1);
+        service.calculate(state, 1);
 
-        Assertions.assertEquals(0, result.getState().getPlayer1PointsInGame());
-        Assertions.assertEquals(0, result.getState().getPlayer2PointsInGame());
-        Assertions.assertEquals(1, result.getState().getPlayer1GamesInSet());
-        Assertions.assertEquals(0, result.getState().getPlayer2GamesInSet());
+        Assertions.assertEquals(0, state.getPlayer1PointsInGame());
+        Assertions.assertEquals(0, state.getPlayer2PointsInGame());
+        Assertions.assertEquals(1, state.getPlayer1GamesInSet());
+        Assertions.assertEquals(0, state.getPlayer2GamesInSet());
     }
 
     @Test
     public void sixSixShouldStartTieBreakTest() {
         reachGamesSixSix(state);
-
-        MatchScoreResult result = service.calculate(state, 1);
-
-        Assertions.assertTrue(result.getState().isTieBreak());
+        service.calculate(state, 1);
+        Assertions.assertTrue(state.isTieBreak());
     }
 
     @Test
@@ -106,15 +103,15 @@ public class MatchScoreCalculationTest {
         awardPoints(state, 1, 6);
         awardPoints(state, 2, 6);
 
-        MatchScoreResult resultAfterSevenSix = service.calculate(state, 1);
-        Assertions.assertEquals(0, resultAfterSevenSix.getState().getPlayer1Sets());
-        Assertions.assertEquals(0, resultAfterSevenSix.getState().getPlayer2Sets());
+        MatchState resultAfterSevenSix = service.calculate(state, 1);
+        Assertions.assertEquals(0, resultAfterSevenSix.getPlayer1Sets());
+        Assertions.assertEquals(0, resultAfterSevenSix.getPlayer2Sets());
 
-        MatchScoreResult resultAfterEightSix = service.calculate(state, 1);
-        Assertions.assertEquals(1, resultAfterEightSix.getState().getPlayer1Sets());
-        Assertions.assertEquals(0, resultAfterEightSix.getState().getPlayer2Sets());
+        MatchState resultAfterEightSix = service.calculate(state, 1);
+        Assertions.assertEquals(1, resultAfterEightSix.getPlayer1Sets());
+        Assertions.assertEquals(0, resultAfterEightSix.getPlayer2Sets());
 
-        Assertions.assertFalse(resultAfterEightSix.getState().isTieBreak());
+        Assertions.assertFalse(resultAfterEightSix.isTieBreak());
     }
 
     @Test
@@ -123,11 +120,11 @@ public class MatchScoreCalculationTest {
         awardPoints(state, 1, 6);
         awardPoints(state, 2, 6);
 
-        MatchScoreResult result = service.calculate(state, 1);
+        service.calculate(state, 1);
 
-        Assertions.assertTrue(result.getState().isTieBreak());
-        Assertions.assertEquals(6, result.getState().getPlayer1GamesInSet());
-        Assertions.assertEquals(6, result.getState().getPlayer2GamesInSet());
+        Assertions.assertTrue(state.isTieBreak());
+        Assertions.assertEquals(6, state.getPlayer1GamesInSet());
+        Assertions.assertEquals(6, state.getPlayer2GamesInSet());
     }
 
     @Test
@@ -152,12 +149,12 @@ public class MatchScoreCalculationTest {
         }
         awardPoints(state, 2, 3);
 
-        MatchScoreResult result = service.calculate(state, 2);
+        service.calculate(state, 2);
 
         Assertions.assertTrue(state.isFinished());
         Assertions.assertEquals(2, state.getWinnerPlayerId());
-        Assertions.assertEquals(2, result.getState().getPlayer2Sets());
-        Assertions.assertEquals(1, result.getState().getPlayer1Sets());
+        Assertions.assertEquals(2, state.getPlayer2Sets());
+        Assertions.assertEquals(1, state.getPlayer1Sets());
     }
 
     private MatchState basicMatchState() {
