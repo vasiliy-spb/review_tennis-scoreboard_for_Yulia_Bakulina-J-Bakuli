@@ -2,7 +2,7 @@ package dao;
 
 import dto.FinishedMatchDto;
 import exception.AlreadyExistsException;
-import exception.DatabaseException;
+import exception.DataAccessException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.FinishedMatchDtoMapper;
 import mapper.H2FinishedMatchMapper;
@@ -66,7 +66,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                 throw new AlreadyExistsException("Finished match already exists.", e);
             }
 
-            throw new DatabaseException("Failed to save finished match", e);
+            throw new DataAccessException("Failed to save finished match", e);
         }
     }
 
@@ -103,7 +103,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                     .getSingleResult()
                     .intValue();
         } catch (Exception e) {
-            throw new DatabaseException("Failed to count finished matches", e);
+            throw new DataAccessException("Failed to count finished matches", e);
         }
     }
 
@@ -116,7 +116,7 @@ public class H2MatchesDao extends AbstractH2Dao implements MatchesDao {
                     .getResultList();
             return mapper.toDto(matchEntities);
         } catch (Exception e) {
-            throw new DatabaseException("Failed to find finished matches", e);
+            throw new DataAccessException("Failed to find finished matches", e);
         }
     }
 

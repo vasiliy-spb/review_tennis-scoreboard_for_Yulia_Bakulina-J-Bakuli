@@ -16,7 +16,7 @@ public class ExceptionHandler {
         } else if (e instanceof ValidationException) {
             log.warn("Mapped {} to DATA_IS_INVALID (400): {}", e.getClass().getSimpleName(), e.getMessage());
             return ExceptionMessage.DATA_IS_INVALID;
-        } else if (e instanceof DatabaseException) {
+        } else if (e instanceof DataAccessException) {
             log.error("Mapped {} to INTERNAL_ERROR (500): {}", e.getClass().getSimpleName(), e.getMessage(), e);
             return ExceptionMessage.INTERNAL_ERROR;
         } else {

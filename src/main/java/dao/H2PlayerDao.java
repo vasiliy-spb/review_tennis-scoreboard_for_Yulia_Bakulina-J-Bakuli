@@ -1,7 +1,7 @@
 package dao;
 
 import exception.AlreadyExistsException;
-import exception.DatabaseException;
+import exception.DataAccessException;
 import exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import mapper.H2PlayerMapper;
@@ -39,7 +39,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
                 throw new AlreadyExistsException("Player with name=" + normalizedName + " already exists.", e);
             }
 
-            throw new DatabaseException("Failed to save player with name=" + normalizedName, e);
+            throw new DataAccessException("Failed to save player with name=" + normalizedName, e);
         }
     }
 
@@ -62,7 +62,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
-            throw new DatabaseException("Failed to find player by name=" + normalizedName, e);
+            throw new DataAccessException("Failed to find player by name=" + normalizedName, e);
         }
     }
 
@@ -83,7 +83,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
         } catch (NotFoundException e) {
             throw e;
         } catch (Exception e) {
-            throw new DatabaseException("Failed to find player by id=" + id, e);
+            throw new DataAccessException("Failed to find player by id=" + id, e);
         }
     }
 }
