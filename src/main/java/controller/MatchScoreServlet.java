@@ -10,8 +10,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import model.MatchState;
-import model.OngoingMatch;
 import service.FinishedMatchesService;
 import service.MatchScoreCalculationService;
 import service.OngoingMatchService;
@@ -22,17 +20,15 @@ import java.io.IOException;
 @Slf4j
 public class MatchScoreServlet extends BaseServlet {
     private OngoingMatchService ongoingMatchService;
-    private FinishedMatchesService finishedMatchesService;
-    private MatchScoreCalculationService matchScoreCalculationService;
 
     @Override
     public void init() throws ServletException {
         PlayerDao playerDao = getRequiredAttribute(AppLifecycleListener.PLAYER_DAO_ATTR, PlayerDao.class);
         MatchesDao matchesDao = getRequiredAttribute(AppLifecycleListener.MATCHES_DAO_ATTR, MatchesDao.class);
         OngoingMatchDao ongoingMatchDao = getRequiredAttribute(AppLifecycleListener.ONGOING_MATCH_DAO_ATTR, OngoingMatchDao.class);
-        ongoingMatchService = new OngoingMatchService(ongoingMatchDao, playerDao);
-        finishedMatchesService = new FinishedMatchesService(matchesDao);
-        matchScoreCalculationService = new MatchScoreCalculationService();
+        FinishedMatchesService finishedMatchesService = new FinishedMatchesService(matchesDao);
+        MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
+        ongoingMatchService = new OngoingMatchService(matchScoreCalculationService, finishedMatchesService, ongoingMatchDao, playerDao);
     }
 
     @Override
@@ -49,21 +45,9 @@ public class MatchScoreServlet extends BaseServlet {
         log.info("POST /match-score");
         String uuid = req.getParameter("uuid");
         String winner = req.getParameter("winner");
+        boolean isFinished = ongoingMatchService.processMatchScore(uuid, winner);
 
-        OngoingMatch ongoingMatch = ongoingMatchService.findOngoingMatch(uuid);
-        Integer winnerId = ongoingMatchService.findWinnerPlayerId(winner, ongoingMatch);
-        MatchState matchState = ongoingMatch.getMatchState();
-
-        if (matchState.isFinished()) {
-            resp.sendRedirect(req.getContextPath() + "/matches");
-            return;
-        } else {
-            matchScoreCalculationService.calculate(matchState, winnerId);
-        }
-
-        if (matchState.isFinished()) {
-            finishedMatchesService.saveFinishedMatch(ongoingMatch);
-            ongoingMatchService.finishOngoingMatch(uuid);
+        if (isFinished) {
             resp.sendRedirect(req.getContextPath() + "/matches");
         } else {
             resp.sendRedirect(req.getContextPath() + "/match-score?uuid=" + uuid);

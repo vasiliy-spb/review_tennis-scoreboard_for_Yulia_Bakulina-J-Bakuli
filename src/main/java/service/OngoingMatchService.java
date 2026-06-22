@@ -3,23 +3,60 @@ package service;
 import dao.OngoingMatchDao;
 import dao.PlayerDao;
 import dto.MatchScoreDto;
-import exception.ValidationException;
+import exception.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
+import model.MatchState;
 import model.OngoingMatch;
 import model.Player;
-import model.PlayerSide;
 import util.PlayerUtils;
 import validation.MatchValidation;
 import validation.PlayerValidation;
 
 import java.util.UUID;
 
+
+@Slf4j
 public class OngoingMatchService {
+    private final MatchScoreCalculationService matchScoreCalculationService;
+    private final FinishedMatchesService finishedMatchesService;
     private final OngoingMatchDao ongoingMatchDao;
     private final PlayerDao playerDao;
 
-    public OngoingMatchService(OngoingMatchDao ongoingMatchDao, PlayerDao playerDao) {
+    public OngoingMatchService(MatchScoreCalculationService matchScoreCalculationService,
+                               FinishedMatchesService finishedMatchesService,
+                               OngoingMatchDao ongoingMatchDao,
+                               PlayerDao playerDao) {
+        this.matchScoreCalculationService = matchScoreCalculationService;
+        this.finishedMatchesService = finishedMatchesService;
         this.ongoingMatchDao = ongoingMatchDao;
         this.playerDao = playerDao;
+    }
+
+    public boolean processMatchScore(String uuidToConvert, String pointWinner) {
+        OngoingMatch ongoingMatch = findOngoingMatch(uuidToConvert);
+        MatchState matchState = ongoingMatch.getMatchState();
+        Integer pointWinnerId = findWinnerPlayerId(pointWinner, ongoingMatch);
+        UUID uuid = ongoingMatch.getUuid();
+
+        synchronized (ongoingMatch) {
+            try {
+                if (matchState.isFinished()) {
+                    return true;
+                } else {
+                    matchScoreCalculationService.calculate(matchState, pointWinnerId);
+                }
+
+                if (matchState.isFinished()) {
+                    finishedMatchesService.saveFinishedMatch(ongoingMatch);
+                    finishOngoingMatch(uuid.toString());
+                    return true;
+                }
+            } catch (NotFoundException e) {
+                log.info("Match uuid={} is already finished and removed from memory", uuid);
+                return true;
+            }
+        }
+        return false;
     }
 
     public MatchScoreDto findMatchScore(String uuidToConvert) {
@@ -37,33 +74,20 @@ public class OngoingMatchService {
         );
     }
 
-    public OngoingMatch findOngoingMatch(String uuidToConvert) {
+    private OngoingMatch findOngoingMatch(String uuidToConvert) {
         MatchValidation.validateMatchUuid(uuidToConvert);
         UUID uuid = MatchValidation.parseUuid(uuidToConvert);
         return ongoingMatchDao.findByUuid(uuid);
     }
 
-    public String findPlayerNameByOngoingMatch(OngoingMatch ongoingMatch, PlayerSide playerSide) {
-        MatchValidation.validateOngoingMatch(ongoingMatch);
-        if (playerSide == null) {
-            throw new ValidationException("player side cannot be null");
-        }
-
-        Integer playerId = switch (playerSide) {
-            case PLAYER1 -> ongoingMatch.getPlayer1();
-            case PLAYER2 -> ongoingMatch.getPlayer2();
-        };
-        return findPlayerNameById(playerId);
-    }
-
-    public String findPlayerNameById(Integer id) {
+    private String findPlayerNameById(Integer id) {
         PlayerValidation.validatePlayerId(id);
         Player player = playerDao.findById(id);
         PlayerValidation.validatePlayerForRead(player);
         return player.name();
     }
 
-    public Integer findWinnerPlayerId(String winner, OngoingMatch ongoingMatch) {
+    private Integer findWinnerPlayerId(String winner, OngoingMatch ongoingMatch) {
         MatchValidation.validateWinner(winner);
         MatchValidation.validateOngoingMatch(ongoingMatch);
 
@@ -78,7 +102,7 @@ public class OngoingMatchService {
         return player2Id;
     }
 
-    public void finishOngoingMatch(String uuidToConvert) {
+    private void finishOngoingMatch(String uuidToConvert) {
         MatchValidation.validateMatchUuid(uuidToConvert);
         UUID uuid = MatchValidation.parseUuid(uuidToConvert);
         ongoingMatchDao.removeByUuid(uuid);
