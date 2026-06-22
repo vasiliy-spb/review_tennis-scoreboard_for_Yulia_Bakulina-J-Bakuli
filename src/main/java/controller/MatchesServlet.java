@@ -1,6 +1,5 @@
 package controller;
 
-import dao.MatchesDao;
 import db.AppLifecycleListener;
 import dto.FinishedMatchesPageDto;
 import jakarta.servlet.ServletException;
@@ -19,8 +18,8 @@ public class MatchesServlet extends BaseServlet {
 
     @Override
     public void init() throws ServletException {
-        MatchesDao matchesDao = getRequiredAttribute(AppLifecycleListener.MATCHES_DAO_ATTR, MatchesDao.class);
-        finishedMatchesService = new FinishedMatchesService(matchesDao);
+        finishedMatchesService = getRequiredAttribute(
+                AppLifecycleListener.FINISHED_MATCHES_SERVICE_ATTR, FinishedMatchesService.class);
     }
 
     @Override

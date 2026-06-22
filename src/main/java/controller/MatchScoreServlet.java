@@ -1,8 +1,5 @@
 package controller;
 
-import dao.MatchesDao;
-import dao.OngoingMatchDao;
-import dao.PlayerDao;
 import db.AppLifecycleListener;
 import dto.MatchScoreDto;
 import jakarta.servlet.ServletException;
@@ -10,8 +7,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import service.FinishedMatchesService;
-import service.MatchScoreCalculationService;
 import service.OngoingMatchService;
 
 import java.io.IOException;
@@ -23,12 +18,8 @@ public class MatchScoreServlet extends BaseServlet {
 
     @Override
     public void init() throws ServletException {
-        PlayerDao playerDao = getRequiredAttribute(AppLifecycleListener.PLAYER_DAO_ATTR, PlayerDao.class);
-        MatchesDao matchesDao = getRequiredAttribute(AppLifecycleListener.MATCHES_DAO_ATTR, MatchesDao.class);
-        OngoingMatchDao ongoingMatchDao = getRequiredAttribute(AppLifecycleListener.ONGOING_MATCH_DAO_ATTR, OngoingMatchDao.class);
-        FinishedMatchesService finishedMatchesService = new FinishedMatchesService(matchesDao);
-        MatchScoreCalculationService matchScoreCalculationService = new MatchScoreCalculationService();
-        ongoingMatchService = new OngoingMatchService(matchScoreCalculationService, finishedMatchesService, ongoingMatchDao, playerDao);
+        ongoingMatchService = getRequiredAttribute(
+                AppLifecycleListener.ONGOING_MATCH_SERVICE_ATTR, OngoingMatchService.class);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package controller;
 
-import dao.OngoingMatchDao;
-import dao.PlayerDao;
 import db.AppLifecycleListener;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -20,9 +18,8 @@ public class NewMatchServlet extends BaseServlet {
 
     @Override
     public void init() throws ServletException {
-        PlayerDao playerDao = getRequiredAttribute(AppLifecycleListener.PLAYER_DAO_ATTR, PlayerDao.class);
-        OngoingMatchDao ongoingMatchDao = getRequiredAttribute(AppLifecycleListener.ONGOING_MATCH_DAO_ATTR, OngoingMatchDao.class);
-        newMatchService = new NewMatchService(playerDao, ongoingMatchDao);
+        newMatchService = getRequiredAttribute(
+                AppLifecycleListener.NEW_MATCH_SERVICE_ATTR, NewMatchService.class);
     }
 
     @Override
