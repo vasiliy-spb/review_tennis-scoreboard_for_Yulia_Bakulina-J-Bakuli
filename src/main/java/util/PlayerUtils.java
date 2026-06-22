@@ -7,10 +7,6 @@ public final class PlayerUtils {
         throw new UnsupportedOperationException("Utility class cannot be instantiated");
     }
 
-    public static String normalizeName(String name) {
-        return name.trim().toLowerCase(Locale.ROOT);
-    }
-
     public static String normalizeInput(String input) {
         return input.trim().toLowerCase(Locale.ROOT);
     }

@@ -15,7 +15,7 @@ public class InMemoryPlayerDao implements PlayerDao {
 
     @Override
     public Player save(Player player) {
-        String normalizedName = PlayerUtils.normalizeName(player.name());
+        String normalizedName = PlayerUtils.normalizeInput(player.name());
 
         boolean alreadyExists = players.values().stream()
                 .anyMatch(existingPlayer -> normalizedName.equals(existingPlayer.name()));
@@ -33,7 +33,7 @@ public class InMemoryPlayerDao implements PlayerDao {
 
     @Override
     public Player findByName(String name) {
-        String normalizedName = PlayerUtils.normalizeName(name);
+        String normalizedName = PlayerUtils.normalizeInput(name);
         return players.values().stream().filter(
                         player -> normalizedName.equals(player.name()))
                 .findFirst()

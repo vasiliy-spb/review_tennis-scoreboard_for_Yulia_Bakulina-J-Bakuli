@@ -16,7 +16,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
     @Override
     public Player save(Player player) {
-        String normalizedName = PlayerUtils.normalizeName(player.name());
+        String normalizedName = PlayerUtils.normalizeInput(player.name());
 
         log.debug("Saving player: id={}, name={} ", player.id(), normalizedName);
 
@@ -35,7 +35,7 @@ public class H2PlayerDao extends AbstractH2Dao implements PlayerDao {
 
     @Override
     public Player findByName(String name) {
-        String normalizedName = PlayerUtils.normalizeName(name);
+        String normalizedName = PlayerUtils.normalizeInput(name);
 
         log.debug("Finding player by name: name={} ", normalizedName);
 
