@@ -1,3 +1,5 @@
+### [Ревью на реализацию проекта находится здесь](https://github.com/vasiliy-spb/review_tennis-scoreboard_for_Yulia_Bakulina-J-Bakuli/blob/code-review/code-review/REVIEW_README.md)
+
 # Tennis Match Scoreboard
 
 Небольшое веб-приложение для ведения счёта в теннисном матче. Можно создать матч, накидывать очки и посмотреть список уже сыгранных.
